@@ -70,3 +70,31 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
             self.thruster(dx=0, dy=-0.05)
         elif keys[pg.K_DOWN]:
             self.thruster(dx=0, dy=0.05)
+
+    def locate(self, planet):
+        """
+        Calculate the distance and heading (used to point satellite dish at planet) from the satellite to the planet.
+        """
+
+        px, py = planet.x, planet.y  # position of planet
+        dist_x = self.x - px
+        dist_y = self.y - py
+
+        '''
+           dist_x
+        S-------        S: satellite
+         \     |
+          \    |
+           \ t | dist_y
+            \  |
+             \ |
+              \|
+               P        P: planet
+        '''
+        planet_dir_radians = math.atan2(
+            dist_x, dist_y)  # get the angle t in the diagram above in radians
+        self.heading = planet_dir_radians * 180 / math.pi  # convert angle to degrees
+        # bottom of satellite image points toward planet by default so rotate to point the dish at the planet (clockwise)
+        self.heading -= 90
+        # calculate the distance between satellite and planet (hypotenuse of triangle in above diagram)
+        self.distance = math.hypot(dist_x, dist_y)
