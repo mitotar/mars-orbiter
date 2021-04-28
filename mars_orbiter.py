@@ -83,7 +83,7 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
 
         '''
            dist_x
-        S-------        S: satellite
+        S - - --        S: satellite
          \     |
           \    |
            \ t | dist_y
@@ -105,6 +105,7 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
         """
         Rotate satellite so the dish faces the planet.
         """
+        # rotate image and store in separate variable so as not to degrade original
         self.image = pg.transform.rotate(self.image_sat, self.heading)
         self.rect = self.image.get_rect()
 
@@ -134,3 +135,29 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
         if self.dx == 0 and self.y == 0:
             self.image = self.image_crash
             self.image.set_colorkey(BLACK)
+
+
+class Planet(pg.sprite.Sprite):
+    """
+    Planet object that rotates and projects gravity field.
+    """
+
+    def __init__(self):
+        super().__init__()
+        # load and convert images to pygame format
+        self.image_mars = pg.image.load("mars.png").convert()
+        self.image_water = pg.image.load("mars_water.png").convert()
+
+        # scale down planet image and store in separate variable so as not to degrade original
+        self.image_copy = pg.transform.scale(self.image_mars, (100, 100))
+        self.image_copy.set_colorkey(BLACK)
+        self.rect = self.image_copy.get_rect()
+        self.image = self.image_copy
+
+        self.mass = 2000
+        # set center of planet image to be center of game screen size
+        self.x = 400
+        self.y = 320
+        self.rect.center = (self.x, self.y)
+        self.angle = math.degrees(0)
+        self.rotate_by = math.degrees(0.01)
