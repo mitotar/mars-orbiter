@@ -19,6 +19,7 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
     def __init__(self, background):
         # path of satellite will be drawn on the background object
         super().__init__()
+        # background object on which the satellite path will be drawn
         self.background = background
         # convert images to a pygame format
         self.image_sat = pg.image.load(
@@ -27,7 +28,7 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
         self.image_crash = pg.image.load("satellite_crash_40x33.png").convert()
         self.image = self.image_sat
         self.rect = self.image.get_rect()  # pygame places sprites on rectangular objects
-        # sets black to be transparent so as not to cover the mars image
+        # sets black to be transparent so as not to cover the planet image
         self.image.set_colorkey(BLACK)
 
         # initialize range of intial satellite position
@@ -95,6 +96,25 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
             dist_x, dist_y)  # get the angle t in the diagram above in radians
         self.heading = planet_dir_radians * 180 / math.pi  # convert angle to degrees
         # bottom of satellite image points toward planet by default so rotate to point the dish at the planet (clockwise)
+        # note: this just changes the heading attribute, the actual image is rotated accordingly in the rotate() method
         self.heading -= 90
         # calculate the distance between satellite and planet (hypotenuse of triangle in above diagram)
         self.distance = math.hypot(dist_x, dist_y)
+
+    def rotate(self):
+        """
+        Rotate satellite so the dish faces the planet.
+        """
+        self.image = pg.transform.rotate(self.image_sat, self.heading)
+        self.rect = self.image.get_rect()
+
+    def path(self):
+        """
+        Update satellite's position and draw a line to trace its orbital path.
+        """
+
+        last_center = (self.x, self.y)
+        self.x += self.dx
+        self.y += self.dy
+        # draw on the sprite background object a line connecting the sprite's last and current locations
+        pg.draw.line(self.background, WHITE, last_center, (self.x, self.y))
