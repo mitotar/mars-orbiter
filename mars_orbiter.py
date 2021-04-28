@@ -118,3 +118,19 @@ class Satellite(pg.sprite.Sprite):  # inherits from a pygame base class for game
         self.y += self.dy
         # draw on the sprite background object a line connecting the sprite's last and current locations
         pg.draw.line(self.background, WHITE, last_center, (self.x, self.y))
+
+    def update(self):
+        """
+        Update the satellite object during the game.
+        """
+
+        self.check_keys()  # check if keys were pressed
+        self.rotate()  # keep satellite facing the planet
+        self.path()  # draw satellite orbit path
+        # keep track of satellite sprite location
+        self.rect.center = (self.x, self.y)
+
+        # change satellite image to red if in atmosphere
+        if self.dx == 0 and self.y == 0:
+            self.image = self.image_crash
+            self.image.set_colorkey(BLACK)
