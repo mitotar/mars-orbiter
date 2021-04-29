@@ -197,3 +197,15 @@ class Planet(pg.sprite.Sprite):
         Call the rotate method.
         """
         self.rotate()
+
+
+def calc_eccentricity(dist_list):
+    """
+    Calculate and return eccentricity from a list of satellite altitudes.
+    """
+
+    apoapsis = max(dist_list)
+    periapsis = min(dist_list)
+    eccentricity = (apoapsis - periapsis) / (apoapsis + periapsis)
+
+    return eccentricity
