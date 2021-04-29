@@ -204,8 +204,36 @@ def calc_eccentricity(dist_list):
     Calculate and return eccentricity from a list of satellite altitudes.
     """
 
+    # periapsis = apoapsis for perfect circle
     apoapsis = max(dist_list)
     periapsis = min(dist_list)
     eccentricity = (apoapsis - periapsis) / (apoapsis + periapsis)
 
     return eccentricity
+
+
+def instruct_label(screen, text, color, x, y):
+    """
+    Displays game instructions.
+    Take screen, list of strings, color, and upper-left corner and render text to screen.
+    """
+
+    instruct_font = pg.font.SysFont(None, 25)
+    line_spacing = 22
+    for index, line in enumerate(text):
+        label = instruct_font.render(line, True, color, BLACK)
+        screen.blit(label, (x, y + index * line_spacing))
+
+
+def box_label(screen, text, dimensions):
+    """
+    Make fixed-size label from screen, text and left, top, width, height.
+    """
+
+    readout_font = pg.font.SysFont(None, 27)
+    # pass in dimensions to keep box the same size no matter the text
+    base = pg.Rect(dimensions)
+    pg.draw.rect(screen, WHITE, base, 0)
+    label = readout_font.render(text, True, BLACK)
+    label_rect = label.get_rect(center=base.center)
+    screen.blit(label, label_rect)
