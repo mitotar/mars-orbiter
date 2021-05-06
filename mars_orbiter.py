@@ -258,3 +258,16 @@ def mapping_off(planet):
 
     planet.image_copy = pg.transform.scale(planet.image_mars, (100, 100))
     planet.image_copy.set_colorkey(BLACK)
+
+
+def cast_shadow(screen):
+    """
+    Add optional terminator and shadow behind planet to screen.
+    To remove shadow, comment out this function call in main(), or change the alpha value here to 0.
+    """
+
+    # create pygame object to be used for shadow
+    shadow = pg.Surface((400, 100),  # 400 pixels wide x 100 pixels high
+                        flags=pg.SRCALPHA)  # per-pixel alpha
+    shadow.fill((0, 0, 0, 210))  # last number sets transparency
+    screen.blit(shadow, (0, 270))  # tuple is top left coordinate
