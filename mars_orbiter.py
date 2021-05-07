@@ -3,6 +3,10 @@ import math
 import random  # to randomize initial orbit and velocity
 import pygame as pg
 
+##############################
+# p. 382 -- main()
+##############################
+
 # color variables
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -197,3 +201,77 @@ class Planet(pg.sprite.Sprite):
         Call the rotate method.
         """
         self.rotate()
+
+
+def calc_eccentricity(dist_list):
+    """
+    Calculate and return eccentricity from a list of satellite altitudes.
+    """
+
+    # periapsis = apoapsis for perfect circle
+    apoapsis = max(dist_list)
+    periapsis = min(dist_list)
+    eccentricity = (apoapsis - periapsis) / (apoapsis + periapsis)
+
+    return eccentricity
+
+
+def instruct_label(screen, text, color, x, y):
+    """
+    Displays game instructions.
+    Take screen, list of strings, color, and upper-left corner and render text to screen.
+    """
+
+    instruct_font = pg.font.SysFont(None, 25)
+    line_spacing = 22
+    for index, line in enumerate(text):
+        label = instruct_font.render(line, True, color, BLACK)
+        screen.blit(label, (x, y + index * line_spacing))
+
+
+def box_label(screen, text, dimensions):
+    """
+    Make fixed-size label from screen, text and left, top, width, height.
+    """
+
+    readout_font = pg.font.SysFont(None, 27)
+    # pass in dimensions to keep box the same size no matter the text
+    base = pg.Rect(dimensions)
+    pg.draw.rect(screen, WHITE, base, 0)
+    label = readout_font.render(text, True, BLACK)
+    label_rect = label.get_rect(center=base.center)
+    screen.blit(label, label_rect)
+
+
+def mapping_on(planet):
+    """
+    Show soil moisture image of planet.
+    """
+
+    last_center = planet.rect.center
+    planet.image_copy = pg.transform.scale(planet.image_water, (100, 100))
+    planet.image_copy.set_colorkey(BLACK)
+    planet.rect = planet.image_copy.get_rect()
+    planet.rect.center = last_center
+
+
+def mapping_off(planet):
+    """
+    Restore normal planet image.
+    """
+
+    planet.image_copy = pg.transform.scale(planet.image_mars, (100, 100))
+    planet.image_copy.set_colorkey(BLACK)
+
+
+def cast_shadow(screen):
+    """
+    Add optional terminator and shadow behind planet to screen.
+    To remove shadow, comment out this function call in main(), or change the alpha value here to 0.
+    """
+
+    # create pygame object to be used for shadow
+    shadow = pg.Surface((400, 100),  # 400 pixels wide x 100 pixels high
+                        flags=pg.SRCALPHA)  # per-pixel alpha
+    shadow.fill((0, 0, 0, 210))  # last number sets transparency
+    screen.blit(shadow, (0, 270))  # tuple is top left coordinate
