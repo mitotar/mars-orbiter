@@ -3,6 +3,10 @@ import math
 import random  # to randomize initial orbit and velocity
 import pygame as pg
 
+##############################
+# p. 382 -- main()
+##############################
+
 # color variables
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
